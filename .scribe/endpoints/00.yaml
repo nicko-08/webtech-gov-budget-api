@@ -1,0 +1,147 @@
+name: Analytics
+description: 'Analytics endpoints for dashboard data'
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/analytics/overall-summary
+    metadata:
+      custom: []
+      groupName: Analytics
+      groupDescription: 'Analytics endpoints for dashboard data'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get overall summary analytics (all barangays combined)'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer {YOUR_TOKEN}'
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"Overall summary retrieved successfully","data":{"total_allocated":18528729,"total_spent":7410478,"utilization_rate":39.99,"remaining_budget":11118251,"spending_by_category":{"Infrastructure Development":3728913,"Health and Sanitation":1260323,"Education and Youth":1173454,"Peace and Order":1247788}}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '58'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/analytics/barangay-list
+    metadata:
+      custom: []
+      groupName: Analytics
+      groupDescription: 'Analytics endpoints for dashboard data'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get barangay list for selection cards'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer {YOUR_TOKEN}'
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"Barangay list retrieved successfully","data":[{"budget_id":1,"barangay_name":"Barangay San Antonio","budget_name":"Barangay San Antonio Annual Budget 2026","total_allocated":3855348,"total_spent":1662112,"utilization_rate":43.11,"status":"Under Budget"},{"budget_id":2,"barangay_name":"Barangay Santo Domingo","budget_name":"Barangay Santo Domingo Annual Budget 2026","total_allocated":3797975,"total_spent":1276205,"utilization_rate":33.6,"status":"Under Budget"},{"budget_id":3,"barangay_name":"Barangay Bagong Pag-asa","budget_name":"Barangay Bagong Pag-asa Annual Budget 2026","total_allocated":3593065,"total_spent":1367918,"utilization_rate":38.07,"status":"Under Budget"},{"budget_id":4,"barangay_name":"Barangay Tatalon","budget_name":"Barangay Tatalon Annual Budget 2026","total_allocated":3550378,"total_spent":1570098,"utilization_rate":44.22,"status":"Under Budget"},{"budget_id":5,"barangay_name":"Barangay Kamuning","budget_name":"Barangay Kamuning Annual Budget 2026","total_allocated":3731963,"total_spent":1534145,"utilization_rate":41.11,"status":"Under Budget"}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '58'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/analytics/barangay/{budgetId}'
+    metadata:
+      custom: []
+      groupName: Analytics
+      groupDescription: 'Analytics endpoints for dashboard data'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get detailed analytics for specific barangay'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer {YOUR_TOKEN}'
+    urlParameters:
+      budgetId:
+        custom: []
+        name: budgetId
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      budgetId: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '58'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

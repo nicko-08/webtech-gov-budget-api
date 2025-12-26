@@ -1,0 +1,327 @@
+name: Expenses
+description: 'Expense management endpoints'
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/expenses
+    metadata:
+      custom: []
+      groupName: Expenses
+      groupDescription: 'Expense management endpoints'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List expenses'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer {YOUR_TOKEN}'
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":109,"description":"Professional Services for Day Care Center Improvement","amount":18328,"transaction_date":"2026-10-27T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":94,"description":"Labor Cost for Medical Equipment Purchase","amount":38117,"transaction_date":"2026-08-01T00:00:00.000000Z","budget_item":{"id":18,"name":"Medical Equipment Purchase","code":"BRG3-HEALTH-002","allocated_amount":285514,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":95,"description":"Labor Cost for Medical Equipment Purchase","amount":70056,"transaction_date":"2026-10-27T00:00:00.000000Z","budget_item":{"id":18,"name":"Medical Equipment Purchase","code":"BRG3-HEALTH-002","allocated_amount":285514,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":103,"description":"Labor Cost for Day Care Center Improvement","amount":20433,"transaction_date":"2026-06-04T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":104,"description":"Labor Cost for Day Care Center Improvement","amount":9491,"transaction_date":"2026-02-16T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":96,"description":"Transportation for Vaccination Program","amount":7962,"transaction_date":"2026-02-28T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":100,"description":"Transportation for Vaccination Program","amount":9781,"transaction_date":"2026-10-30T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":102,"description":"Materials Purchase for Vaccination Program","amount":7490,"transaction_date":"2026-06-07T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":108,"description":"Professional Services for Day Care Center Improvement","amount":12812,"transaction_date":"2026-04-29T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":112,"description":"Equipment Rental for Learning Materials Purchase","amount":7610,"transaction_date":"2026-12-15T00:00:00.000000Z","budget_item":{"id":21,"name":"Learning Materials Purchase","code":"BRG3-EDU-002","allocated_amount":93598,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":309,"description":"Transportation for Barangay Patrol Equipment","amount":8779,"transaction_date":"2026-07-17T00:00:00.000000Z","budget_item":{"id":60,"name":"Barangay Patrol Equipment","code":"BRG6-PEACE-002","allocated_amount":106210,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":98,"description":"Labor Cost for Vaccination Program","amount":6017,"transaction_date":"2026-04-07T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":97,"description":"Materials Purchase for Vaccination Program","amount":6131,"transaction_date":"2026-11-15T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":106,"description":"Professional Services for Day Care Center Improvement","amount":23721,"transaction_date":"2026-06-05T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":107,"description":"Equipment Rental for Day Care Center Improvement","amount":24146,"transaction_date":"2026-07-24T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":99,"description":"Materials Purchase for Vaccination Program","amount":9702,"transaction_date":"2026-01-02T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":111,"description":"Transportation for Learning Materials Purchase","amount":14461,"transaction_date":"2026-12-22T00:00:00.000000Z","budget_item":{"id":21,"name":"Learning Materials Purchase","code":"BRG3-EDU-002","allocated_amount":93598,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":113,"description":"Transportation for Learning Materials Purchase","amount":5033,"transaction_date":"2026-06-05T00:00:00.000000Z","budget_item":{"id":21,"name":"Learning Materials Purchase","code":"BRG3-EDU-002","allocated_amount":93598,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":101,"description":"Materials Purchase for Vaccination Program","amount":9428,"transaction_date":"2026-04-20T00:00:00.000000Z","budget_item":{"id":19,"name":"Vaccination Program","code":"BRG3-HEALTH-003","allocated_amount":87074,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}},{"id":105,"description":"Labor Cost for Day Care Center Improvement","amount":19047,"transaction_date":"2026-02-28T00:00:00.000000Z","budget_item":{"id":20,"name":"Day Care Center Improvement","code":"BRG3-EDU-001","allocated_amount":257518,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"}}],"links":{"first":"http:\/\/localhost:8000\/api\/v1\/expenses?page=1","last":"http:\/\/localhost:8000\/api\/v1\/expenses?page=16","prev":null,"next":"http:\/\/localhost:8000\/api\/v1\/expenses?page=2"},"meta":{"current_page":1,"from":1,"last_page":16,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=1","label":"1","page":1,"active":true},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=2","label":"2","page":2,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=3","label":"3","page":3,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=4","label":"4","page":4,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=5","label":"5","page":5,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=6","label":"6","page":6,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=7","label":"7","page":7,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=8","label":"8","page":8,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=9","label":"9","page":9,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=10","label":"10","page":10,"active":false},{"url":null,"label":"...","active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=15","label":"15","page":15,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=16","label":"16","page":16,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/expenses?page=2","label":"Next &raquo;","page":2,"active":false}],"path":"http:\/\/localhost:8000\/api\/v1\/expenses","per_page":20,"to":20,"total":309}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '59'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/expenses/{id}'
+    metadata:
+      custom: []
+      groupName: Expenses
+      groupDescription: 'Expense management endpoints'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show expense'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer {YOUR_TOKEN}'
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the expense.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"description":"Labor Cost for Basketball Court Renovation","amount":17305,"transaction_date":"2026-06-18T00:00:00.000000Z","budget_item":{"id":1,"name":"Basketball Court Renovation","code":"BRG2-INFRA-001","allocated_amount":402365,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '59'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/expenses
+    metadata:
+      custom: []
+      groupName: Expenses
+      groupDescription: 'Expense management endpoints'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create expense'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      budget_item_id:
+        custom: []
+        name: budget_item_id
+        description: 'Budget item ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Expense description.'
+        required: true
+        example: 'Office supplies purchase'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Expense amount.'
+        required: true
+        example: 1500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      transaction_date:
+        custom: []
+        name: transaction_date
+        description: 'Transaction date.'
+        required: true
+        example: '2024-01-15'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      budget_item_id: 1
+      description: 'Office supplies purchase'
+      amount: 1500.0
+      transaction_date: '2024-01-15'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer your_test_token_here'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/expenses/{id}'
+    metadata:
+      custom: []
+      groupName: Expenses
+      groupDescription: 'Expense management endpoints'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update expense'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the expense.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      budget_item_id:
+        custom: []
+        name: budget_item_id
+        description: 'ID of the budget item under which this expense is recorded. The <code>id</code> of an existing record in the budget_items table.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Updated brief description of the expense or transaction. Must not be greater than 255 characters.'
+        required: false
+        example: 'Purchase of office supplies for road maintenance'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Updated amount spent for this expense. Must be greater than zero. Must be at least 0.01.'
+        required: false
+        example: 125000.5
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      transaction_date:
+        custom: []
+        name: transaction_date
+        description: 'Updated date when the expense was incurred. Cannot be a future date. Must be a valid date. Must be a date before or equal to <code>today</code>.'
+        required: false
+        example: '2025-03-15'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      budget_item_id: 15
+      description: 'Purchase of office supplies for road maintenance'
+      amount: 125000.5
+      transaction_date: '2025-03-15'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer your_test_token_here'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/expenses/{id}'
+    metadata:
+      custom: []
+      groupName: Expenses
+      groupDescription: 'Expense management endpoints'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete expense'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the expense.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer your_test_token_here'
+    controller: null
+    method: null
+    route: null
