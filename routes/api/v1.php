@@ -50,10 +50,21 @@ Route::prefix('v1')->group(function () {
         ->only(['index', 'show'])
         ->names('api.v1.public.expenses');
 
+    Route::apiResource('/budget-categories', BudgetCategoryController::class)
+        ->only(['index', 'show']);
+
+    Route::apiResource('/government-units', GovernmentUnitController::class)
+        ->only(['index', 'show']);
+
+    Route::apiResource('/fiscal-years', FiscalYearController::class)
+        ->only(['index', 'show']);
+
+    Route::get('/health', fn() => response()->json(['status' => 'ok']));
+
     // Authenticated & Throttled
     Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
-        // Budget Operations (Admin + Budget Officer)
+        // Budget Operations (Admin, Budget Officer)
         Route::middleware('role:admin,budget-officer')->group(function () {
             Route::apiResource('/budgets', BudgetController::class)
                 ->except(['index', 'show'])
@@ -99,22 +110,9 @@ Route::prefix('v1')->group(function () {
             ->name('api.v1.logout');
     });
 
-    // Public Reference Data (Read-Only)
-    Route::apiResource('/budget-categories', BudgetCategoryController::class)
-        ->only(['index', 'show']);
-
-    Route::apiResource('/government-units', GovernmentUnitController::class)
-        ->only(['index', 'show']);
-
-    Route::apiResource('/fiscal-years', FiscalYearController::class)
-        ->only(['index', 'show']);
-
-    Route::get('/health', fn() => response()->json(['status' => 'ok']));
-
-
+    // Allow only in production
     Route::post('/_bootstrap/admin', function () {
 
-        // Allow only in production
         abort_unless(app()->environment('production'), 403);
 
         // Allow only if NO admin exists

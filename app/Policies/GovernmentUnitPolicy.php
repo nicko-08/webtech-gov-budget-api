@@ -7,14 +7,14 @@ use App\Models\User;
 
 final class GovernmentUnitPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return $user->role === 'admin';
+        return true;
     }
 
-    public function view(User $user, GovernmentUnit $governmentUnit): bool
+    public function view(?User $user, GovernmentUnit $governmentUnit): bool
     {
-        return $user->role === 'admin';
+        return true;
     }
 
     public function create(User $user): bool

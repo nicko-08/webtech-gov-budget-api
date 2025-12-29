@@ -7,14 +7,14 @@ use App\Models\User;
 
 class FiscalYearPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return $user->role === 'admin';
+        return true;
     }
 
-    public function view(User $user, FiscalYear $fiscalYear): bool
+    public function view(?User $user, FiscalYear $fiscalYear): bool
     {
-        return $user->role === 'admin';
+        return true;
     }
 
     public function create(User $user): bool

@@ -28,8 +28,6 @@ class BudgetController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', Budget::class);
-
         return BudgetResource::collection(
             Budget::with(['governmentUnit', 'fiscalYear'])
                 ->latest()
@@ -71,8 +69,6 @@ class BudgetController extends Controller
      */
     public function show(Budget $budget): BudgetResource
     {
-        $this->authorize('view', $budget);
-
         $budget->load([
             'governmentUnit',
             'fiscalYear',

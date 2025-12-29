@@ -26,8 +26,6 @@ class GovernmentUnitController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', GovernmentUnit::class);
-
         return GovernmentUnitResource::collection(
             GovernmentUnit::query()
                 ->with('parent')
@@ -67,8 +65,6 @@ class GovernmentUnitController extends Controller
      */
     public function show(GovernmentUnit $governmentUnit): GovernmentUnitResource
     {
-        $this->authorize('view', $governmentUnit);
-
         $governmentUnit->load(['parent', 'children']);
 
         return new GovernmentUnitResource($governmentUnit);

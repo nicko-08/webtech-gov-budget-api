@@ -26,8 +26,6 @@ class ExpenseController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', Expense::class);
-
         $expenses = Expense::query()
             ->with('budgetItem')
             ->when(
@@ -74,8 +72,6 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense): ExpenseResource
     {
-        $this->authorize('view', $expense);
-
         return new ExpenseResource(
             $expense->load('budgetItem')
         );

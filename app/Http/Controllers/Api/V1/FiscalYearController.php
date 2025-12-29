@@ -25,8 +25,6 @@ class FiscalYearController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', FiscalYear::class);
-
         return FiscalYearResource::collection(
             FiscalYear::query()
                 ->orderByDesc('year')
@@ -75,8 +73,6 @@ class FiscalYearController extends Controller
      */
     public function show(FiscalYear $fiscalYear): FiscalYearResource
     {
-        $this->authorize('view', $fiscalYear);
-
         return new FiscalYearResource($fiscalYear);
     }
 

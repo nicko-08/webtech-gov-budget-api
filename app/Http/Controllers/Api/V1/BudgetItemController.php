@@ -28,8 +28,6 @@ class BudgetItemController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', BudgetItem::class);
-
         $budgetItems = BudgetItem::query()
             ->with(['budget', 'category'])
             ->when(
@@ -74,8 +72,6 @@ class BudgetItemController extends Controller
      */
     public function show(BudgetItem $budgetItem): BudgetItemResource
     {
-        $this->authorize('view', $budgetItem);
-
         $budgetItem
             ->load(['budget', 'category'])
             ->loadSum('expenses', 'amount');
