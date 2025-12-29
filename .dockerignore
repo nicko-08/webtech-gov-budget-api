@@ -1,0 +1,16 @@
+.git
+.gitignore
+
+node_modules
+vendor
+
+.env
+.env.*
+
+storage/*.key
+storage/logs/*
+bootstrap/cache/*
+
+npm-debug.log
+yarn-error.log
+.phpunit.result.cache
