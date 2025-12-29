@@ -8,11 +8,11 @@ use App\Http\Requests\StoreFiscalYearRequest;
 use App\Http\Requests\UpdateFiscalYearRequest;
 use App\Http\Resources\FiscalYearResource;
 use App\Models\FiscalYear;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group Fiscal Years
@@ -20,20 +20,25 @@ use Illuminate\Support\Facades\DB;
  */
 class FiscalYearController extends Controller
 {
-    use ApiResponse;
-
     /**
      * List fiscal years
      */
     public function index(): AnonymousResourceCollection
     {
-        return FiscalYearResource::collection(FiscalYear::orderBy('year', 'desc')->paginate(20));
+        $this->authorize('viewAny', FiscalYear::class);
+
+        return FiscalYearResource::collection(
+            FiscalYear::query()
+                ->orderByDesc('year')
+                ->paginate(20)
+        );
     }
 
     /**
      * Create fiscal year
-     * 
+     *
      * @authenticated
+     *
      * @bodyParam year integer required Fiscal year. Example: 2024
      * @bodyParam start_date date required Start date. Example: 2024-01-01
      * @bodyParam end_date date required End date. Example: 2024-12-31
@@ -41,37 +46,45 @@ class FiscalYearController extends Controller
      */
     public function store(StoreFiscalYearRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $fiscalYear = null;
+        $this->authorize('create', FiscalYear::class);
 
-        DB::transaction(function () use ($validated, &$fiscalYear, $request) {
-            if (isset($validated['is_active']) && $validated['is_active']) {
-                FiscalYear::where('is_active', true)->update(['is_active' => false]);
+        $fiscalYear = DB::transaction(function () use ($request) {
+            if ($request->boolean('is_active')) {
+                FiscalYear::where('is_active', true)
+                    ->update(['is_active' => false]);
             }
-            $fiscalYear = FiscalYear::create($validated);
 
-            // Only fire event if user is authenticated
-            if ($request->user()) {
-                event(new FiscalYearModified($fiscalYear, $request->user(), 'created'));
-            }
+            $model = FiscalYear::create($request->validated());
+
+            event(new FiscalYearModified(
+                $model,
+                $request->user(),
+                'created'
+            ));
+
+            return $model;
         });
 
-        return $this->resourceResponse(new FiscalYearResource($fiscalYear), 'Fiscal year created successfully', 201);
+        return (new FiscalYearResource($fiscalYear))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
      * Show fiscal year
-     * 
      */
     public function show(FiscalYear $fiscalYear): FiscalYearResource
     {
+        $this->authorize('view', $fiscalYear);
+
         return new FiscalYearResource($fiscalYear);
     }
 
     /**
      * Update fiscal year
-     * 
+     *
      * @authenticated
+     *
      * @response 200 {
      *   "success": true,
      *   "message": "Fiscal year updated successfully",
@@ -84,39 +97,48 @@ class FiscalYearController extends Controller
      *   }
      * }
      */
-    public function update(UpdateFiscalYearRequest $request, FiscalYear $fiscalYear): JsonResponse
+    public function update(UpdateFiscalYearRequest $request, FiscalYear $fiscalYear): FiscalYearResource
     {
-        $validated = $request->validated();
+        $this->authorize('update', $fiscalYear);
 
-        DB::transaction(function () use ($validated, $fiscalYear, $request) {
-            if (isset($validated['is_active']) && $validated['is_active']) {
-                FiscalYear::where('is_active', true)->where('id', '!=', $fiscalYear->id)->update(['is_active' => false]);
+        DB::transaction(function () use ($request, $fiscalYear) {
+            if ($request->boolean('is_active')) {
+                FiscalYear::where('is_active', true)
+                    ->whereKeyNot($fiscalYear->id)
+                    ->update(['is_active' => false]);
             }
-            $fiscalYear->update($validated);
 
-            // Only fire event if user is authenticated
-            if ($request->user()) {
-                event(new FiscalYearModified($fiscalYear, $request->user(), 'updated'));
-            }
+            $fiscalYear->update($request->validated());
+
+            event(new FiscalYearModified(
+                $fiscalYear,
+                $request->user(),
+                'updated'
+            ));
         });
 
-        return $this->resourceResponse(new FiscalYearResource($fiscalYear->fresh()), 'Fiscal year updated successfully');
+        return new FiscalYearResource($fiscalYear->fresh());
     }
 
     /**
      * Delete fiscal year
-     * 
+     *
      * @authenticated
      */
-    public function destroy(Request $request, FiscalYear $fiscalYear): JsonResponse
+    public function destroy(Request $request, FiscalYear $fiscalYear): Response
     {
-        // Only fire event if user is authenticated
-        if ($request->user()) {
-            event(new FiscalYearModified($fiscalYear, $request->user(), 'deleted'));
-        }
+        $this->authorize('delete', $fiscalYear);
 
-        $fiscalYear->delete();
+        DB::transaction(function () use ($fiscalYear, $request) {
+            $fiscalYear->delete();
 
-        return $this->success(null, 'Fiscal year deleted successfully', 200);
+            event(new FiscalYearModified(
+                $fiscalYear,
+                $request->user(),
+                'deleted'
+            ));
+        });
+
+        return response()->noContent();
     }
 }

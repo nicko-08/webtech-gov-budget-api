@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class AuditLog extends Model
+final class AuditLog extends Model
 {
-    public $timestamps = false;
-
     protected $fillable = [
         'user_id',
         'action',
@@ -16,33 +16,46 @@ class AuditLog extends Model
         'auditable_type',
         'details',
         'ip_address',
-        'created_at'
     ];
 
-    protected $casts = [
-        'details' => 'array',
-        'created_at' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'user_id' => 'integer',
+            'auditable_id' => 'integer',
+            'details' => 'array',
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function auditable()
+    public function auditable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    // Scope for filtering by resource type
-    public function scopeForResource($query, string $resourceType)
+    public function scopeForResource(Builder $query, string $resource): Builder
     {
-        return $query->where('auditable_type', $resourceType);
+        if (! str_contains($resource, '\\')) {
+            $resource = 'App\\Models\\' . $resource;
+        }
+
+        return $query->where('auditable_type', $resource);
     }
 
-    // Scope for filtering by user
-    public function scopeByUser($query, int $userId)
+    public function scopeByUser(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);
+    }
+
+    // Prevent accidental updates, deletes, or cleanups
+    protected static function booted(): void
+    {
+        static::updating(fn() => false);
+        static::deleting(fn() => false);
     }
 }

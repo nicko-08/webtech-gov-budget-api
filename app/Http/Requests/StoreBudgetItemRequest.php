@@ -27,7 +27,39 @@ class StoreBudgetItemRequest extends FormRequest
             'budget_category_id' => ['required', 'integer', Rule::exists('budget_categories', 'id')],
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:50', Rule::unique('budget_items', 'code')],
-            'allocated_amount' => ['required', 'numeric', 'min:0'],
+            'allocated_amount' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:9999999999999.99'
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'budget_id.required' => 'The budget ID is required.',
+            'budget_id.integer' => 'The budget ID must be a valid integer.',
+            'budget_id.exists' => 'The selected budget does not exist.',
+
+            'budget_category_id.required' => 'The budget category ID is required.',
+            'budget_category_id.integer' => 'The budget category ID must be a valid integer.',
+            'budget_category_id.exists' => 'The selected budget category does not exist.',
+
+            'name.required' => 'The budget item name is required.',
+            'name.string' => 'The budget item name must be a valid string.',
+            'name.max' => 'The budget item name may not exceed 255 characters.',
+
+            'code.required' => 'The budget item code is required.',
+            'code.string' => 'The budget item code must be a valid string.',
+            'code.max' => 'The budget item code may not exceed 50 characters.',
+            'code.unique' => 'This budget item code is already in use.',
+
+            'allocated_amount.required' => 'The allocated amount is required.',
+            'allocated_amount.numeric' => 'The allocated amount must be a number.',
+            'allocated_amount.min' => 'The allocated amount must be zero or greater.',
+            'allocated_amount.max' => 'The allocated amount exceeds the maximum allowed value.',
         ];
     }
 

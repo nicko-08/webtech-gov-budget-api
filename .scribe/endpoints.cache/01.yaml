@@ -7,86 +7,6 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/register
-    metadata:
-      custom: []
-      groupName: Authentication
-      groupDescription: 'User authentication endpoints'
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Register a new user'
-      description: ''
-      authenticated: false
-      deprecated: false
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        custom: []
-        name: name
-        description: "The user's full name."
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      email:
-        custom: []
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: "The user's password."
-        required: true
-        example: password123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password_confirmation:
-        custom: []
-        name: password_confirmation
-        description: 'Password confirmation (must match password).'
-        required: true
-        example: password123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      name: 'John Doe'
-      email: john@example.com
-      password: password123
-      password_confirmation: password123
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
     uri: api/v1/login
     metadata:
       custom: []
@@ -101,7 +21,6 @@ endpoints:
     headers:
       Content-Type: application/json
       Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
@@ -110,27 +29,27 @@ endpoints:
       email:
         custom: []
         name: email
-        description: 'User email address.'
+        description: 'Registered email address of the user. Must be a valid email address.'
         required: true
-        example: admin@example.com
+        example: admin@barangay.gov.ph
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
       password:
         custom: []
         name: password
-        description: 'User password.'
+        description: 'Account password.'
         required: true
         example: password
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: admin@example.com
+      email: admin@barangay.gov.ph
       password: password
     fileParameters: []
     responses: []
@@ -170,7 +89,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null

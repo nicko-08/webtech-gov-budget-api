@@ -30,21 +30,25 @@ class LogApiRequests
             default => 'info'
         };
 
-        Log::log($logLevel, 'API Request', [
+        Log::log($logLevel, 'api.request', [
             'method' => $request->method(),
             'url' => $request->url(),
             'route' => $request->route()?->getName(),
             'status' => $statusCode,
             'user_id' => $request->user()?->id,
             'ip' => $request->ip(),
-            'user_agent' => $request->userAgent()
+            'user_agent' => $request->userAgent(),
         ]);
     }
 
     private function isAuthEndpoint(Request $request): bool
     {
-        return str_contains($request->path(), 'login') ||
-            str_contains($request->path(), 'register') ||
-            str_contains($request->path(), 'logout');
+        return str_starts_with(
+            (string) $request->route()?->getName(),
+            'api.v1.'
+        ) && in_array($request->route()?->getName(), [
+            'api.v1.login',
+            'api.v1.logout',
+        ], true);
     }
 }

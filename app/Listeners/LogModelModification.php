@@ -3,67 +3,104 @@
 namespace App\Listeners;
 
 use App\Models\AuditLog;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class LogModelModification implements ShouldQueue
+final class LogModelModification
 {
+    private const CRITICAL_MODELS = ['Budget', 'User', 'Expense'];
+
+    private const CRITICAL_ACTIONS = ['created', 'deleted'];
+
     public function handle(object $event): void
     {
-        if (!isset($event->model) || !isset($event->user) || !isset($event->action)) {
+        if (! $this->isValidEvent($event)) {
             return;
         }
 
         try {
-            $model = $event->model;
-            $details = $this->getDetails($model, $event->action);
+            $this->storeAuditLog($event);
 
-            AuditLog::create([
-                'user_id' => $event->user->id,
-                'action' => $event->action,
-                'auditable_id' => $model->id,
-                'auditable_type' => get_class($model),
-                'details' => $details,
-                'ip_address' => request()?->ip(),
-                'created_at' => now()
-            ]);
-
-            // Log critical actions to application logs
-            if ($this->isCriticalAction($model, $event->action)) {
-                Log::info('Critical action performed', [
-                    'user_id' => $event->user->id,
-                    'action' => $event->action,
-                    'resource' => class_basename($model),
-                    'resource_id' => $model->id
-                ]);
+            if ($this->isCriticalAction($event->model, $event->action)) {
+                $this->logCriticalAction($event);
             }
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Audit logging failed', [
                 'error' => $e->getMessage(),
-                'user_id' => $event->user->id ?? null,
-                'action' => $event->action ?? null
+                'user_id' => $event->user?->id,
+                'action' => $event->action ?? null,
             ]);
         }
     }
 
-    private function getDetails($model, string $action): ?array
+    private function isValidEvent(object $event): bool
+    {
+        return isset($event->model, $event->user, $event->action)
+            && $event->model instanceof Model;
+    }
+
+    private function storeAuditLog(object $event): void
+    {
+        $model = $event->model;
+
+        AuditLog::create([
+            'user_id' => $event->user->id,
+            'action' => $event->action,
+            'auditable_id' => $model->getKey(),
+            'auditable_type' => $model::class,
+            'details' => $this->getDetails($model, $event->action),
+            'ip_address' => app()->runningInConsole()
+                ? null
+                : request()->ip(),
+        ]);
+    }
+
+    private function sanitize(array $data, Model $model): array
+    {
+        $hidden = array_merge(
+            $model->getHidden(),
+            [
+                'password',
+                'remember_token',
+                'api_token',
+                'current_access_token',
+                'two_factor_secret',
+                'two_factor_recovery_codes',
+            ]
+        );
+
+        return array_diff_key(
+            $data,
+            array_flip($hidden)
+        );
+    }
+
+    private function getDetails(Model $model, string $action): ?array
     {
         return match ($action) {
             'updated' => [
-                'before' => $model->getOriginal(),
-                'after' => $model->getChanges(),
+                'before' => $this->sanitize($model->getOriginal(), $model),
+                'after' => $this->sanitize($model->getChanges(), $model),
             ],
-            'deleted' => $model->toArray(),
-            default => null
+            'deleted' => $this->sanitize($model->toArray(), $model),
+            default => null,
         };
     }
 
-    private function isCriticalAction($model, string $action): bool
+    private function isCriticalAction(Model $model, string $action): bool
     {
-        $criticalModels = ['Budget', 'User', 'Expense'];
-        $criticalActions = ['created', 'deleted'];
+        return in_array(class_basename($model), self::CRITICAL_MODELS, true)
+            && in_array($action, self::CRITICAL_ACTIONS, true);
+    }
 
-        return in_array(class_basename($model), $criticalModels) &&
-            in_array($action, $criticalActions);
+    private function logCriticalAction(object $event): void
+    {
+        Log::info('Critical action performed', [
+            'user_id' => $event->user->id,
+            'action' => $event->action,
+            'resource' => class_basename($event->model),
+            'resource_id' => $event->model->getKey(),
+        ]);
     }
 }

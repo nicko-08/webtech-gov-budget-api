@@ -34,6 +34,32 @@ class UpdateBudgetItemRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'budget_id.required' => 'The budget ID is required when provided.',
+            'budget_id.integer' => 'The budget ID must be a valid integer.',
+            'budget_id.exists' => 'The selected budget does not exist.',
+
+            'budget_category_id.required' => 'The budget category ID is required when provided.',
+            'budget_category_id.integer' => 'The budget category ID must be a valid integer.',
+            'budget_category_id.exists' => 'The selected budget category does not exist.',
+
+            'name.required' => 'The budget item name is required when provided.',
+            'name.string' => 'The budget item name must be a valid string.',
+            'name.max' => 'The budget item name may not exceed 255 characters.',
+
+            'code.required' => 'The budget item code is required when provided.',
+            'code.string' => 'The budget item code must be a valid string.',
+            'code.max' => 'The budget item code may not exceed 50 characters.',
+            'code.unique' => 'This budget item code is already in use.',
+
+            'allocated_amount.required' => 'The allocated amount is required when provided.',
+            'allocated_amount.numeric' => 'The allocated amount must be a number.',
+            'allocated_amount.min' => 'The allocated amount must be zero or greater.',
+        ];
+    }
+
     public function bodyParameters(): array
     {
         return [

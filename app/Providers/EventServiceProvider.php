@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
-use App\Events\BudgetModified;
 use App\Events\BudgetItemModified;
+use App\Events\BudgetModified;
 use App\Events\ExpenseModified;
-use App\Events\GovernmentUnitModified;
 use App\Events\FiscalYearModified;
+use App\Events\GovernmentUnitModified;
 use App\Listeners\LogModelModification;
+use App\Listeners\AutoRecalculateAnalytics;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -20,18 +21,22 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         BudgetModified::class => [
             LogModelModification::class,
+            AutoRecalculateAnalytics::class,
         ],
         BudgetItemModified::class => [
             LogModelModification::class,
+            AutoRecalculateAnalytics::class,
         ],
         ExpenseModified::class => [
             LogModelModification::class,
+            AutoRecalculateAnalytics::class,
         ],
         GovernmentUnitModified::class => [
             LogModelModification::class,
         ],
         FiscalYearModified::class => [
             LogModelModification::class,
+            AutoRecalculateAnalytics::class,
         ],
     ];
 

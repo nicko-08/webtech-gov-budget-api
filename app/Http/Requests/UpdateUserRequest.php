@@ -17,11 +17,39 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->route('user')?->id;
+
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($userId)],
+            'name' => ['sometimes', 'string', 'max:255'],
+            'email' => [
+                'sometimes',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($userId),
+            ],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'role' => ['sometimes', 'required', 'string', 'in:admin,budget-officer,auditor,user'],
+            'role' => ['sometimes', 'string', 'in:admin,budget-officer,auditor,user'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.string' => 'The user name must be a valid string.',
+            'name.max' => 'The user name may not exceed 255 characters.',
+
+            'email.string' => 'The email address must be a valid string.',
+            'email.email' => 'The email address must be a valid email format.',
+            'email.lowercase' => 'The email address must be in lowercase.',
+            'email.max' => 'The email address may not exceed 255 characters.',
+            'email.unique' => 'This email address is already in use.',
+
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.min' => 'The password does not meet the minimum security requirements.',
+
+            'role.string' => 'The user role must be a valid string.',
+            'role.in' => 'The selected user role is invalid.',
         ];
     }
 

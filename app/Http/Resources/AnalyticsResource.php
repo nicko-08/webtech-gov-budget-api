@@ -14,7 +14,7 @@ class AnalyticsResource extends JsonResource
             'total_spent' => (float) $this->total_spent,
             'utilization_rate' => (float) $this->utilization_rate,
             'remaining_budget' => (float) ($this->total_allocated - $this->total_spent),
-            'spending_by_category' => json_decode($this->spending_by_category, true) ?? [],
+            'spending_by_category' => $this->spending_by_category,
         ];
     }
 }

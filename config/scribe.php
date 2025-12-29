@@ -1,22 +1,23 @@
 <?php
 
-use Knuckles\Scribe\Extracting\Strategies;
-use Knuckles\Scribe\Config\Defaults;
 use Knuckles\Scribe\Config\AuthIn;
-use function Knuckles\Scribe\Config\{removeStrategies, configureStrategy};
+use Knuckles\Scribe\Config\Defaults;
+use Knuckles\Scribe\Extracting\Strategies;
+
+use function Knuckles\Scribe\Config\configureStrategy;
 
 return [
     'title' => 'Government Budget API Documentation',
 
     'description' => 'API for managing government budgets, expenses, and analytics for government units.',
 
-    'intro_text' => <<<INTRO
+    'intro_text' => <<<'INTRO'
         This documentation provides all the information you need to work with the Government Budget API.
 
         <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right.</aside>
     INTRO,
 
-    'base_url' => config("app.url"),
+    'base_url' => config('app.url'),
 
     'routes' => [
         [
@@ -27,7 +28,7 @@ return [
             'include' => [],
             'exclude' => [
                 'GET /health',
-                'sanctum/*'
+                'sanctum/*',
             ],
         ],
     ],
@@ -51,7 +52,7 @@ return [
 
     'auth' => [
         'enabled' => true,
-        'default' => false,
+        'default' => true,
         'in' => AuthIn::BEARER->value,
         'name' => 'Authorization',
         'use_value' => env('SCRIBE_AUTH_KEY'),
@@ -95,7 +96,7 @@ return [
             'Budget Categories',
             'Fiscal Years',
             'Government Units',
-            'Users'
+            'Users',
         ],
     ],
 
@@ -116,7 +117,6 @@ return [
             Strategies\StaticData::withSettings(data: [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer {YOUR_TOKEN}',
             ]),
         ],
         'urlParameters' => [
@@ -139,7 +139,7 @@ return [
         ),
         'responseFields' => [
             ...Defaults::RESPONSE_FIELDS_STRATEGIES,
-        ]
+        ],
     ],
 
     'database_connections_to_transact' => [config('database.default')],

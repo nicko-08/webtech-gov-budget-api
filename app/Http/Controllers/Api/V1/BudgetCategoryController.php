@@ -3,45 +3,47 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBudgetCategoryRequest;
+use App\Http\Requests\UpdateBudgetCategoryRequest;
 use App\Http\Resources\BudgetCategoryResource;
 use App\Models\BudgetCategory;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group Budget Categories
- * Budget category management endpoints  
+ * Budget category management endpoints
  */
 class BudgetCategoryController extends Controller
 {
-    use ApiResponse;
-
     /**
      * List budget categories
      */
     public function index(): AnonymousResourceCollection
     {
-        return BudgetCategoryResource::collection(BudgetCategory::all());
+        $this->authorize('viewAny', BudgetCategory::class);
+
+        return BudgetCategoryResource::collection(
+            BudgetCategory::query()->latest()->get()
+        );
     }
 
     /**
      * Create budget category
-     * 
+     *
      * @authenticated
+     *
      * @bodyParam name string required Category name. Example: Office Supplies
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreBudgetCategoryRequest $request): Response
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:budget_categories,name'],
-        ]);
+        $this->authorize('create', BudgetCategory::class);
 
-        $category = BudgetCategory::create($validated);
+        $category = BudgetCategory::create($request->validated());
 
-        return $this->resourceResponse(new BudgetCategoryResource($category), 'Budget category created successfully', 201);
+        return (new BudgetCategoryResource($category))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -49,35 +51,38 @@ class BudgetCategoryController extends Controller
      */
     public function show(BudgetCategory $budgetCategory): BudgetCategoryResource
     {
+        $this->authorize('view', $budgetCategory);
+
         return new BudgetCategoryResource($budgetCategory);
     }
 
     /**
      * Update budget category
-     * 
+     *
      * @authenticated
+     *
      * @bodyParam name string Category name. Example: Office Equipment
      */
-    public function update(Request $request, BudgetCategory $budgetCategory): JsonResponse
+    public function update(UpdateBudgetCategoryRequest $request, BudgetCategory $budgetCategory): BudgetCategoryResource
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('budget_categories', 'name')->ignore($budgetCategory->id)],
-        ]);
+        $this->authorize('update', $budgetCategory);
 
-        $budgetCategory->update($validated);
+        $budgetCategory->update($request->validated());
 
-        return $this->resourceResponse(new BudgetCategoryResource($budgetCategory), 'Budget category updated successfully');
+        return new BudgetCategoryResource($budgetCategory);
     }
 
     /**
      * Delete budget category
-     * 
+     *
      * @authenticated
      */
-    public function destroy(BudgetCategory $budgetCategory): JsonResponse
+    public function destroy(BudgetCategory $budgetCategory): Response
     {
+        $this->authorize('delete', $budgetCategory);
+
         $budgetCategory->delete();
 
-        return $this->success(null, 'Budget category deleted successfully', 200);
+        return response()->noContent();
     }
 }

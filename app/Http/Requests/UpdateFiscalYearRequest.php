@@ -15,11 +15,31 @@ class UpdateFiscalYearRequest extends FormRequest
     public function rules(): array
     {
         $fiscalYearId = $this->route('fiscal_year')?->id;
+
         return [
             'year' => ['sometimes', 'required', 'integer', Rule::unique('fiscal_years', 'year')->ignore($fiscalYearId), 'min:1900'],
             'start_date' => ['sometimes', 'required', 'date'],
             'end_date' => ['sometimes', 'required', 'date', 'after:start_date'],
             'is_active' => ['sometimes', 'boolean'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'year.required' => 'The fiscal year is required when provided.',
+            'year.integer' => 'The fiscal year must be a valid year number.',
+            'year.unique' => 'This fiscal year already exists.',
+            'year.min' => 'The fiscal year must be 1900 or later.',
+
+            'start_date.required' => 'The start date is required when provided.',
+            'start_date.date' => 'The start date must be a valid date.',
+
+            'end_date.required' => 'The end date is required when provided.',
+            'end_date.date' => 'The end date must be a valid date.',
+            'end_date.after' => 'The end date must be after the start date.',
+
+            'is_active.boolean' => 'The active flag must be true or false.',
         ];
     }
 

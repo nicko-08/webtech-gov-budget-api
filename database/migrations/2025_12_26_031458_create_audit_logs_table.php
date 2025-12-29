@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->morphs('auditable'); // auditable_id, auditable_type
-            $table->string('action'); // e.g., 'created', 'updated', 'deleted'
+            $table->string('action'); // 'created', 'updated', 'deleted'
             $table->json('details')->nullable(); // Before and after values
             $table->timestamps();
         });

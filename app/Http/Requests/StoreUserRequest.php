@@ -17,9 +17,33 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', 'in:admin,budget-officer,auditor,user'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'The user name is required.',
+            'name.string' => 'The user name must be a valid string.',
+            'name.max' => 'The user name may not exceed 255 characters.',
+
+            'email.required' => 'The email address is required.',
+            'email.string' => 'The email address must be a valid string.',
+            'email.email' => 'The email address must be a valid email format.',
+            'email.lowercase' => 'The email address must be in lowercase.',
+            'email.max' => 'The email address may not exceed 255 characters.',
+            'email.unique' => 'This email address is already registered.',
+
+            'password.required' => 'The password is required.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.min' => 'The password does not meet the minimum security requirements.',
+
+            'role.required' => 'The user role is required.',
+            'role.string' => 'The user role must be a valid string.',
+            'role.in' => 'The selected user role is invalid.',
         ];
     }
 
@@ -33,25 +57,25 @@ class StoreUserRequest extends FormRequest
             ],
 
             'email' => [
-                'description' => 'Unique email address used for user authentication and notifications.',
+                'description' => 'Unique email address.',
                 'example' => 'juan.delacruz@gov.ph',
                 'required' => true,
             ],
 
             'password' => [
-                'description' => 'Password for the user account. Must meet the system’s minimum security requirements.',
+                'description' => 'Account Password.',
                 'example' => 'StrongP@ssw0rd',
                 'required' => true,
             ],
 
             'password_confirmation' => [
-                'description' => 'Confirmation of the password. Must match the password field.',
+                'description' => 'Must match the password.',
                 'example' => 'StrongP@ssw0rd',
                 'required' => true,
             ],
 
             'role' => [
-                'description' => 'Role assigned to the user, which determines access level and permissions.',
+                'description' => 'User Role.',
                 'example' => 'budget-officer',
                 'required' => true,
             ],

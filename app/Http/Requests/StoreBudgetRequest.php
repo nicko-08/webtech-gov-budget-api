@@ -26,7 +26,34 @@ class StoreBudgetRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'government_unit_id' => ['required', 'integer', Rule::exists('government_units', 'id')],
             'fiscal_year_id' => ['required', 'integer', Rule::exists('fiscal_years', 'id')],
-            'total_amount' => ['required', 'numeric', 'min:0'],
+            'total_amount' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:9999999999999.99',
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'The budget name is required.',
+            'name.string' => 'The budget name must be a valid string.',
+            'name.max' => 'The budget name may not exceed 255 characters.',
+
+            'government_unit_id.required' => 'The government unit ID is required.',
+            'government_unit_id.integer' => 'The government unit ID must be a valid integer.',
+            'government_unit_id.exists' => 'The selected government unit does not exist.',
+
+            'fiscal_year_id.required' => 'The fiscal year ID is required.',
+            'fiscal_year_id.integer' => 'The fiscal year ID must be a valid integer.',
+            'fiscal_year_id.exists' => 'The selected fiscal year does not exist.',
+
+            'total_amount.required' => 'The total budget amount is required.',
+            'total_amount.numeric' => 'The total budget amount must be a number.',
+            'total_amount.min' => 'The total budget amount must be zero or greater.',
+            'total_amount.max' => 'The total budget amount exceeds the maximum allowed value.',
         ];
     }
 

@@ -1,18 +1,18 @@
-name: Users
-description: 'User management endpoints'
+name: 'Budget Categories'
+description: 'Budget category management endpoints'
 endpoints:
   -
     custom: []
     httpMethods:
       - GET
-    uri: api/v1/users
+    uri: api/v1/budget-categories
     metadata:
       custom: []
-      groupName: Users
-      groupDescription: 'User management endpoints'
+      groupName: 'Budget Categories'
+      groupDescription: 'Budget category management endpoints'
       subgroup: ''
       subgroupDescription: ''
-      title: 'List users'
+      title: 'List budget categories'
       description: ''
       authenticated: true
       deprecated: false
@@ -30,18 +30,23 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
+        status: 200
+        content: '{"data":[{"id":1,"name":"Infrastructure Development"},{"id":2,"name":"Health and Sanitation"},{"id":3,"name":"Education and Youth"},{"id":4,"name":"Peace and Order"},{"id":5,"name":"Environment and Waste Management"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -49,14 +54,14 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/users
+    uri: api/v1/budget-categories
     metadata:
       custom: []
-      groupName: Users
-      groupDescription: 'User management endpoints'
+      groupName: 'Budget Categories'
+      groupDescription: 'Budget category management endpoints'
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create user'
+      title: 'Create budget category'
       description: ''
       authenticated: true
       deprecated: false
@@ -72,71 +77,23 @@ endpoints:
       name:
         custom: []
         name: name
-        description: "User's full name."
+        description: 'Category name.'
         required: true
-        example: 'Jane Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      email:
-        custom: []
-        name: email
-        description: "User's email."
-        required: true
-        example: jane@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: Password.
-        required: true
-        example: password123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      role:
-        custom: []
-        name: role
-        description: 'User role.'
-        required: true
-        example: admin
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password_confirmation:
-        custom: []
-        name: password_confirmation
-        description: 'Confirm password.'
-        required: true
-        example: password123
+        example: 'Office Supplies'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      name: 'Jane Doe'
-      email: jane@example.com
-      password: password123
-      role: admin
-      password_confirmation: password123
+      name: 'Office Supplies'
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -144,14 +101,14 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/v1/users/{id}'
+    uri: 'api/v1/budget-categories/{id}'
     metadata:
       custom: []
-      groupName: Users
-      groupDescription: 'User management endpoints'
+      groupName: 'Budget Categories'
+      groupDescription: 'Budget category management endpoints'
       subgroup: ''
       subgroupDescription: ''
-      title: 'Show user'
+      title: 'Show budget category'
       description: ''
       authenticated: true
       deprecated: false
@@ -163,7 +120,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the user.'
+        description: 'The ID of the budget category.'
         required: true
         example: 1
         type: integer
@@ -181,18 +138,23 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
+        status: 200
+        content: '{"data":{"id":1,"name":"Infrastructure Development"}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -201,14 +163,14 @@ endpoints:
     httpMethods:
       - PUT
       - PATCH
-    uri: 'api/v1/users/{id}'
+    uri: 'api/v1/budget-categories/{id}'
     metadata:
       custom: []
-      groupName: Users
-      groupDescription: 'User management endpoints'
+      groupName: 'Budget Categories'
+      groupDescription: 'Budget category management endpoints'
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update user'
+      title: 'Update budget category'
       description: ''
       authenticated: true
       deprecated: false
@@ -220,7 +182,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the user.'
+        description: 'The ID of the budget category.'
         required: true
         example: 1
         type: integer
@@ -236,87 +198,23 @@ endpoints:
       name:
         custom: []
         name: name
-        description: "User's full name."
+        description: 'Category name.'
         required: false
-        example: 'Jane Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      email:
-        custom: []
-        name: email
-        description: "User's email."
-        required: false
-        example: jane@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: Password.
-        required: false
-        example: password123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      role:
-        custom: []
-        name: role
-        description: 'User role.'
-        required: false
-        example: admin
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      password_confirmation:
-        custom: []
-        name: password_confirmation
-        description: 'Confirm password (required if password is provided).'
-        required: false
-        example: password123
+        example: 'Office Equipment'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      name: 'Jane Doe'
-      email: jane@example.com
-      password: password123
-      role: admin
-      password_confirmation: password123
+      name: 'Office Equipment'
     fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: |-
-          {
-            "success": true,
-            "message": "User updated successfully",
-            "data": {
-              "id": 1,
-              "name": "Jane Doe",
-              "email": "jane@example.com",
-              "role": "admin"
-            }
-          }
-        headers: []
-        description: ''
+    responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -324,14 +222,14 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/v1/users/{id}'
+    uri: 'api/v1/budget-categories/{id}'
     metadata:
       custom: []
-      groupName: Users
-      groupDescription: 'User management endpoints'
+      groupName: 'Budget Categories'
+      groupDescription: 'Budget category management endpoints'
       subgroup: ''
       subgroupDescription: ''
-      title: 'Delete user'
+      title: 'Delete budget category'
       description: ''
       authenticated: true
       deprecated: false
@@ -343,7 +241,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the user.'
+        description: 'The ID of the budget category.'
         required: true
         example: 1
         type: integer
@@ -363,7 +261,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null

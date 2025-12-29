@@ -16,12 +16,12 @@ endpoints:
       subgroupDescription: ''
       title: 'List fiscal years'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
@@ -32,15 +32,26 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -123,7 +134,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -140,12 +151,12 @@ endpoints:
       subgroupDescription: ''
       title: 'Show fiscal year'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
     urlParameters:
       id:
         custom: []
@@ -168,15 +179,26 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -289,7 +311,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -336,7 +358,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null

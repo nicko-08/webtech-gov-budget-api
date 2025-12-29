@@ -16,11 +16,12 @@ class FiscalYearFactory extends Factory
      */
     public function definition(): array
     {
-        $year = $this->faker->unique()->year();
+        $year = (int) fake()->unique()->year();
+
         return [
-            'year' => fake()->unique()->year(),
-            'start_date' => now()->startOfYear()->toDateString(),
-            'end_date' => now()->endOfYear()->toDateString(),
+            'year' => $year,
+            'start_date' => "{$year}-01-01",
+            'end_date' => "{$year}-12-31",
             'is_active' => false,
         ];
     }

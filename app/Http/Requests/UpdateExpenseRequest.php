@@ -30,6 +30,27 @@ class UpdateExpenseRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'budget_item_id.required' => 'The budget item ID is required when provided.',
+            'budget_item_id.integer' => 'The budget item ID must be a valid integer.',
+            'budget_item_id.exists' => 'The selected budget item does not exist.',
+
+            'description.required' => 'The expense description is required when provided.',
+            'description.string' => 'The expense description must be a valid string.',
+            'description.max' => 'The expense description may not exceed 255 characters.',
+
+            'amount.required' => 'The expense amount is required when provided.',
+            'amount.numeric' => 'The expense amount must be a number.',
+            'amount.min' => 'The expense amount must be greater than zero.',
+
+            'transaction_date.required' => 'The transaction date is required when provided.',
+            'transaction_date.date' => 'The transaction date must be a valid date.',
+            'transaction_date.before_or_equal' => 'The transaction date cannot be in the future.',
+        ];
+    }
+
     public function bodyParameters(): array
     {
         return [

@@ -16,12 +16,12 @@ endpoints:
       subgroupDescription: ''
       title: 'List budgets'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
     urlParameters: []
     cleanUrlParameters: []
     queryParameters:
@@ -45,16 +45,22 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":3,"name":"Barangay Bagong Pag-asa Annual Budget 2026","total_amount":2777274,"government_unit":{"id":4,"name":"Barangay Bagong Pag-asa","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":4,"name":"Barangay Tatalon Annual Budget 2026","total_amount":1728783,"government_unit":{"id":5,"name":"Barangay Tatalon","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":5,"name":"Barangay Kamuning Annual Budget 2026","total_amount":2126553,"government_unit":{"id":6,"name":"Barangay Kamuning","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:43.000000Z","updated_at":"2025-12-26T15:44:43.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":1,"name":"Barangay San Antonio Annual Budget 2026","total_amount":2354918,"government_unit":{"id":2,"name":"Barangay San Antonio","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}},{"id":2,"name":"Barangay Santo Domingo Annual Budget 2026","total_amount":2509021,"government_unit":{"id":3,"name":"Barangay Santo Domingo","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}}],"links":{"first":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","last":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"http:\/\/localhost:8000\/api\/v1\/budgets","per_page":15,"to":5,"total":5}}'
+        content: '{"data":[{"id":1,"name":"Barangay San Antonio Annual Budget 2026","total_amount":2089810,"government_unit":{"id":2,"name":"Barangay San Antonio","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"}},{"id":2,"name":"Barangay Santo Domingo Annual Budget 2026","total_amount":2714573,"government_unit":{"id":3,"name":"Barangay Santo Domingo","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"}},{"id":3,"name":"Barangay Bagong Pag-asa Annual Budget 2026","total_amount":1990525,"government_unit":{"id":4,"name":"Barangay Bagong Pag-asa","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"}},{"id":4,"name":"Barangay Tatalon Annual Budget 2026","total_amount":2184189,"government_unit":{"id":5,"name":"Barangay Tatalon","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"}},{"id":5,"name":"Barangay Kamuning Annual Budget 2026","total_amount":1550941,"government_unit":{"id":6,"name":"Barangay Kamuning","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"}}],"links":{"first":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","last":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost:8000\/api\/v1\/budgets?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"http:\/\/localhost:8000\/api\/v1\/budgets","per_page":15,"to":5,"total":5}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          x-ratelimit-limit: '60'
-          x-ratelimit-remaining: '59'
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -71,12 +77,12 @@ endpoints:
       subgroupDescription: ''
       title: 'Show budget'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-      Authorization: 'Bearer {YOUR_TOKEN}'
     urlParameters:
       id:
         custom: []
@@ -100,16 +106,22 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":1,"name":"Barangay San Antonio Annual Budget 2026","total_amount":2354918,"government_unit":{"id":2,"name":"Barangay San Antonio","type":"barangay","parent_id":1,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"},"fiscal_year":{"id":1,"year":"2026","start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-26T15:44:42.000000Z","updated_at":"2025-12-26T15:44:42.000000Z"}}}'
+        content: '{"data":{"id":1,"name":"Barangay San Antonio Annual Budget 2026","total_amount":2089810,"government_unit":{"id":2,"name":"Barangay San Antonio","type":"barangay","parent_id":1,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"fiscal_year":{"id":1,"year":2026,"start_date":"2026-01-01T00:00:00.000000Z","end_date":"2026-12-31T00:00:00.000000Z","is_active":true,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z"},"budget_items":[{"id":1,"name":"Basketball Court Renovation","code":"BRG2-INFRA-001","allocated_amount":499102,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":1,"name":"Infrastructure Development"},"spent_amount":"172365.00"},{"id":2,"name":"Covered Court Construction","code":"BRG2-INFRA-002","allocated_amount":1126638,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":1,"name":"Infrastructure Development"},"spent_amount":"317321.00"},{"id":3,"name":"Street Lighting Installation","code":"BRG2-INFRA-003","allocated_amount":324440,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":1,"name":"Infrastructure Development"},"spent_amount":"155387.00"},{"id":4,"name":"Drainage System Improvement","code":"BRG2-INFRA-004","allocated_amount":516875,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":1,"name":"Infrastructure Development"},"spent_amount":"140509.00"},{"id":5,"name":"Barangay Health Station Supplies","code":"BRG2-HEALTH-001","allocated_amount":267063,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":2,"name":"Health and Sanitation"},"spent_amount":"132971.00"},{"id":6,"name":"Medical Equipment Purchase","code":"BRG2-HEALTH-002","allocated_amount":307509,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":2,"name":"Health and Sanitation"},"spent_amount":"152073.00"},{"id":7,"name":"Vaccination Program","code":"BRG2-HEALTH-003","allocated_amount":479252,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":2,"name":"Health and Sanitation"},"spent_amount":"203206.00"},{"id":8,"name":"Day Care Center Improvement","code":"BRG2-EDU-001","allocated_amount":88710,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":3,"name":"Education and Youth"},"spent_amount":"58251.00"},{"id":9,"name":"Learning Materials Purchase","code":"BRG2-EDU-002","allocated_amount":469074,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":3,"name":"Education and Youth"},"spent_amount":"191653.00"},{"id":10,"name":"Youth Development Program","code":"BRG2-EDU-003","allocated_amount":173125,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":3,"name":"Education and Youth"},"spent_amount":"109451.00"},{"id":11,"name":"CCTV Camera Installation","code":"BRG2-PEACE-001","allocated_amount":206725,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":4,"name":"Peace and Order"},"spent_amount":"121245.00"},{"id":12,"name":"Barangay Patrol Equipment","code":"BRG2-PEACE-002","allocated_amount":251271,"created_at":"2025-12-28T16:22:51.000000Z","updated_at":"2025-12-28T16:22:51.000000Z","category":{"id":4,"name":"Peace and Order"},"spent_amount":"162355.00"},{"id":61,"name":"Road and Bridge Maintenance","code":"INFRA-RBM-001","allocated_amount":2500000,"created_at":"2025-12-28T16:24:58.000000Z","updated_at":"2025-12-28T16:24:58.000000Z","category":{"id":1,"name":"Infrastructure Development"},"spent_amount":null}]}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          x-ratelimit-limit: '60'
-          x-ratelimit-remaining: '59'
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          referrer-policy: no-referrer
+          permissions-policy: 'geolocation=(), camera=(), microphone=()'
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -192,7 +204,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -249,7 +261,7 @@ endpoints:
         name: government_unit_id
         description: 'Updated ID of the government unit responsible for this budget. The <code>id</code> of an existing record in the government_units table.'
         required: false
-        example: 3
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -260,7 +272,7 @@ endpoints:
         name: fiscal_year_id
         description: 'Updated ID of the fiscal year to which this budget applies. The <code>id</code> of an existing record in the fiscal_years table.'
         required: false
-        example: 2025
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -279,8 +291,8 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       name: 'Revised Infrastructure Budget 2025'
-      government_unit_id: 3
-      fiscal_year_id: 2025
+      government_unit_id: 1
+      fiscal_year_id: 1
       total_amount: 175000000.0
     fileParameters: []
     responses: []
@@ -288,7 +300,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null
@@ -335,7 +347,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer your_test_token_here'
+      - 'Bearer 1|fake-docs-token'
     controller: null
     method: null
     route: null

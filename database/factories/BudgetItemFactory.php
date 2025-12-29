@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Budget;
 use App\Models\BudgetCategory;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +21,7 @@ class BudgetItemFactory extends Factory
         return [
             'budget_id' => Budget::factory(),
             'budget_category_id' => BudgetCategory::factory(),
-            'name' => 'Program/Project - ' . fake()->words(2, true),
+            'name' => 'Program/Project - '.fake()->words(2, true),
             'code' => fake()->unique()->bothify('??##-####'),
             'allocated_amount' => fake()->numberBetween(50000, 5000000),
         ];

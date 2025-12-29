@@ -17,9 +17,9 @@ class GovernmentUnitFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company() . ' Department',
-            'type' => $this->faker->randomElement(['department', 'agency', 'bureau']),
-            'parent_id' => null, // Default to being a top-level unit
+            'name' => fake()->company().' Department',
+            'type' => fake()->randomElement(['department', 'agency', 'bureau']),
+            'parent_id' => null,
         ];
     }
 }

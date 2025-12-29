@@ -12,17 +12,12 @@ class BudgetItemModified
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public BudgetItem $model;
-    public User $user;
-    public string $action;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(BudgetItem $model, User $user, string $action)
-    {
-        $this->model = $model;
-        $this->user = $user;
-        $this->action = $action;
-    }
+    public function __construct(
+        public BudgetItem $model,
+        public User $user,
+        public string $action
+    ) {}
 }

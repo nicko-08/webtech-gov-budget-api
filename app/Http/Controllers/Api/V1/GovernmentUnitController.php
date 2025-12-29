@@ -8,81 +8,130 @@ use App\Http\Requests\StoreGovernmentUnitRequest;
 use App\Http\Requests\UpdateGovernmentUnitRequest;
 use App\Http\Resources\GovernmentUnitResource;
 use App\Models\GovernmentUnit;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cache;
 
 /**
- * @group Government Units  
+ * @group Government Units
  * Government unit management endpoints
  */
 class GovernmentUnitController extends Controller
 {
-    use ApiResponse;
-
     /**
      * List government units
      */
     public function index(): AnonymousResourceCollection
     {
-        $units = GovernmentUnit::with('parent')->latest()->paginate(20);
-        return GovernmentUnitResource::collection($units);
+        $this->authorize('viewAny', GovernmentUnit::class);
+
+        return GovernmentUnitResource::collection(
+            GovernmentUnit::query()
+                ->with('parent')
+                ->latest()
+                ->paginate(20)
+        );
     }
 
     /**
      * Create government unit
-     * 
+     *
      * @authenticated
-     * @bodyParam name string required Unit name. Example: Department of Finance
-     * @bodyParam type string required Unit type. Example: department
+     *
+     * @bodyParam name string required Unit name. Example: Barangay Commonwealth
+     * @bodyParam type string required Unit type. Example: Barangay
      * @bodyParam parent_id integer Parent unit ID. Example: 1
      */
     public function store(StoreGovernmentUnitRequest $request): JsonResponse
     {
-        $unit = GovernmentUnit::create($request->validated());
-        event(new GovernmentUnitModified($unit, $request->user(), 'created'));
+        $this->authorize('create', GovernmentUnit::class);
 
-        return $this->resourceResponse(new GovernmentUnitResource($unit), 'Government unit created successfully', 201);
+        $unit = GovernmentUnit::create($request->validated());
+
+        event(new GovernmentUnitModified(
+            $unit,
+            $request->user(),
+            'created'
+        ));
+
+        return (new GovernmentUnitResource($unit))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
      * Show government unit
-     * 
      */
     public function show(GovernmentUnit $governmentUnit): GovernmentUnitResource
     {
-        $governmentUnit->load('parent', 'children');
+        $this->authorize('view', $governmentUnit);
+
+        $governmentUnit->load(['parent', 'children']);
+
         return new GovernmentUnitResource($governmentUnit);
     }
 
     /**
      * Update government unit
-     * 
+     *
      * @authenticated
      */
-    public function update(UpdateGovernmentUnitRequest $request, GovernmentUnit $governmentUnit): JsonResponse
-    {
-        $governmentUnit->update($request->validated());
-        event(new GovernmentUnitModified($governmentUnit, $request->user(), 'updated'));
+    public function update(
+        UpdateGovernmentUnitRequest $request,
+        GovernmentUnit $governmentUnit
+    ): GovernmentUnitResource {
 
-        return $this->resourceResponse(new GovernmentUnitResource($governmentUnit->fresh()), 'Government unit updated successfully');
+        $this->authorize('update', $governmentUnit);
+
+        $governmentUnit->update($request->validated());
+
+        event(new GovernmentUnitModified(
+            $governmentUnit,
+            $request->user(),
+            'updated'
+        ));
+
+        return new GovernmentUnitResource($governmentUnit->fresh(['parent', 'children']));
     }
 
     /**
      * Delete government unit
-     * 
+     *
      * @authenticated
      */
-    public function destroy(Request $request, GovernmentUnit $governmentUnit): JsonResponse
+    public function destroy(Request $request, GovernmentUnit $governmentUnit): Response
     {
+        $this->authorize('delete', $governmentUnit);
+
         if ($governmentUnit->children()->exists()) {
-            return $this->error('Cannot delete a government unit that has sub-units. Please re-assign or delete them first.', 409);
+            return response()->json([
+                'message' => 'Cannot delete a government unit that has sub-units.',
+            ], Response::HTTP_CONFLICT);
         }
 
-        event(new GovernmentUnitModified($governmentUnit, $request->user(), 'deleted'));
-        $governmentUnit->delete();
+        DB::transaction(function () use ($governmentUnit, $request) {
+            $governmentUnitId = $governmentUnit->id;
 
-        return $this->success(null, 'Government unit deleted successfully', 200);
+            $governmentUnit->delete();
+
+            event(new GovernmentUnitModified(
+                $governmentUnit,
+                $request->user(),
+                'deleted'
+            ));
+
+            /**
+             * Explicit cache invalidation
+             * No recalculation needed — data is gone
+             */
+            Cache::forget("analytics:barangay:{$governmentUnitId}");
+            Cache::forget('analytics:barangay-list');
+            Cache::forget('analytics:overall-summary');
+        });
+
+        return response()->noContent();
     }
 }

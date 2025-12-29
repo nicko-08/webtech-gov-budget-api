@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Users\CreateUser;
+use App\Actions\Users\UpdateUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group Users
@@ -19,94 +20,112 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserController extends Controller
 {
-    use ApiResponse;
+    private const PER_PAGE = 20;
+
+    public function __construct(
+        private readonly CreateUser $createUser,
+        private readonly UpdateUser $updateUser
+    ) {}
 
     /**
      * List users
-     * 
+     *
      * @authenticated
+     *
+     * @apiResourceCollection App\Http\Resources\UserResource
+     *
+     * @apiResourceModel App\Models\User
      */
     public function index(): AnonymousResourceCollection
     {
-        return UserResource::collection(User::latest()->paginate(20));
+        $this->authorize('viewAny', User::class);
+
+        return UserResource::collection(
+            User::query()
+                ->latest()
+                ->paginate(self::PER_PAGE)
+        );
     }
 
     /**
      * Create user
-     * 
+     *
      * @authenticated
-     * @bodyParam name string required User's full name. Example: Jane Doe
-     * @bodyParam email string required User's email. Example: jane@example.com
-     * @bodyParam password string required Password. Example: password123
-     * @bodyParam password_confirmation string required Confirm password. Example: password123
-     * @bodyParam role string required User role. Example: admin
+     *
+     * @bodyParam name string required Full name of the user. Example: Juan Dela Cruz
+     * @bodyParam email string required Unique email address. Example: juan.delacruz@gov.ph
+     * @bodyParam password string required Account password. Example: StrongP@ssw0rd
+     * @bodyParam password_confirmation string required Must match the password. Example: StrongP@ssw0rd
+     * @bodyParam role string required User role. Example: budget-officer
+     *
+     * @apiResource App\Http\Resources\UserResource
+     *
+     * @apiResourceModel App\Models\User
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $validated['password'] = Hash::make($validated['password']);
-        $user = User::create($validated);
+        $this->authorize('create', User::class);
 
-        return $this->resourceResponse(new UserResource($user), 'User created successfully', 201);
+        $user = $this->createUser->execute($request->validated());
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
      * Show user
-     * 
+     *
      * @authenticated
+     *
+     * @apiResource App\Http\Resources\UserResource
+     *
+     * @apiResourceModel App\Models\User
      */
     public function show(User $user): UserResource
     {
+        $this->authorize('view', $user);
+
         return new UserResource($user);
     }
 
     /**
      * Update user
-     * 
+     *
      * @authenticated
-     * @bodyParam name string User's full name. Example: Jane Doe
-     * @bodyParam email string User's email. Example: jane@example.com
-     * @bodyParam password string Password. Example: password123
-     * @bodyParam password_confirmation string Confirm password (required if password is provided). Example: password123
-     * @bodyParam role string User role. Example: admin
-     * @response 200 {
-     *   "success": true,
-     *   "message": "User updated successfully",
-     *   "data": {
-     *     "id": 1,
-     *     "name": "Jane Doe",
-     *     "email": "jane@example.com",
-     *     "role": "admin"
-     *   }
-     * }
+     *
+     * @bodyParam name string Full name of the user. Example: Juan Dela Cruz
+     * @bodyParam email string Unique email address. Example: juan.delacruz@gov.ph
+     * @bodyParam password string New account password (optional). Example: StrongP@ssw0rd
+     * @bodyParam password_confirmation string Required if password is present. Must match the password. Example: StrongP@ssw0rd
+     * @bodyParam role string User role. Example: budget-officer
+     *
+     * @apiResource App\Http\Resources\UserResource
+     *
+     * @apiResourceModel App\Models\User
      */
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): UserResource
     {
-        $validated = $request->validated();
-        if (isset($validated['password']) && !empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-        $user->update($validated);
+        $this->authorize('update', $user);
 
-        return $this->resourceResponse(new UserResource($user->fresh()), 'User updated successfully');
+        $user = $this->updateUser->execute($user, $request->validated());
+
+        return new UserResource($user);
     }
 
     /**
      * Delete user
-     * 
+     *
      * @authenticated
      */
-    public function destroy(User $user): JsonResponse
+    public function destroy(User $user): Response
     {
-        // Check if trying to delete own account (only if user is authenticated)
-        if (Auth::check() && $user->id === Auth::id()) {
-            return $this->error('You cannot delete your own account.', 403);
-        }
+        $this->authorize('delete', $user);
 
-        $user->delete();
+        DB::transaction(function () use ($user) {
+            $user->delete();
+        });
 
-        return $this->success(null, 'User deleted successfully', 200);
+        return response()->noContent();
     }
 }

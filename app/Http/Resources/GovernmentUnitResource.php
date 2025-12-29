@@ -14,7 +14,10 @@ class GovernmentUnitResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'parent_id' => $this->parent_id,
-            'parent' => new GovernmentUnitResource($this->whenLoaded('parent')),
+
+            'parent' => new self($this->whenLoaded('parent')),
+            'children' => self::collection($this->whenLoaded('children')),
+
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Actions\Auth;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
+final class AuthenticateUser
+{
+    public function execute(array $credentials): User
+    {
+        $user = User::query()
+            ->where('email', $credentials['email'])
+            ->first();
+
+        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        return $user;
+    }
+}

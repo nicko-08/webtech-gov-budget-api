@@ -6,32 +6,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleMiddleware
+final class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
 
-        if (!$user || !$this->userHasAnyRole($user, $roles)) {
+        if (! $user || ! in_array($user->role, $roles, true)) {
             return response()->json([
-                'message' => 'This action is unauthorized.'
+                'message' => 'This action is unauthorized.',
             ], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);
-    }
-
-    private function userHasAnyRole($user, array $roles): bool
-    {
-        foreach ($roles as $role) {
-            if ($user->role === $role) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -8,10 +8,12 @@ use App\Http\Requests\StoreBudgetItemRequest;
 use App\Http\Requests\UpdateBudgetItemRequest;
 use App\Http\Resources\BudgetItemResource;
 use App\Models\BudgetItem;
-use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
+use App\Jobs\RecalculateBudgetAnalytics;
 
 /**
  * @group Budget Items
@@ -19,37 +21,52 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 class BudgetItemController extends Controller
 {
-    use ApiResponse;
+    private const PER_PAGE = 20;
 
     /**
      * List budget items
-     * 
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $query = BudgetItem::with(['budget', 'category']);
+        $this->authorize('viewAny', BudgetItem::class);
 
-        if ($request->filled('budget_id') && is_numeric($request->budget_id)) {
-            $query->where('budget_id', $request->budget_id);
-        }
+        $budgetItems = BudgetItem::query()
+            ->with(['budget', 'category'])
+            ->when(
+                $request->filled('budget_id'),
+                fn($query) => $query->where(
+                    'budget_id',
+                    $request->integer('budget_id')
+                )
+            )
+            ->latest()
+            ->paginate(self::PER_PAGE);
 
-        $budgetItems = $query->latest()->paginate(20);
         return BudgetItemResource::collection($budgetItems);
     }
 
     /**
      * Create budget item
-     * 
+     *
      * @authenticated
      */
     public function store(StoreBudgetItemRequest $request): JsonResponse
     {
+        $this->authorize('create', BudgetItem::class);
+
         $budgetItem = BudgetItem::create($request->validated());
-        event(new BudgetItemModified($budgetItem, $request->user(), 'created'));
 
-        $budgetItem->load(['budget', 'category']);
+        event(new BudgetItemModified(
+            $budgetItem,
+            $request->user(),
+            'created'
+        ));
 
-        return $this->resourceResponse(new BudgetItemResource($budgetItem), 'Budget item created successfully', 201);
+        return (new BudgetItemResource(
+            $budgetItem->load(['budget', 'category'])
+        ))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -57,34 +74,65 @@ class BudgetItemController extends Controller
      */
     public function show(BudgetItem $budgetItem): BudgetItemResource
     {
-        $budgetItem->load(['budget', 'category'])->loadSum('expenses', 'amount');
+        $this->authorize('view', $budgetItem);
+
+        $budgetItem
+            ->load(['budget', 'category'])
+            ->loadSum('expenses', 'amount');
+
         return new BudgetItemResource($budgetItem);
     }
 
     /**
      * Update budget item
-     * 
+     *
      * @authenticated
      */
-    public function update(UpdateBudgetItemRequest $request, BudgetItem $budgetItem): JsonResponse
+    public function update(UpdateBudgetItemRequest $request, BudgetItem $budgetItem): BudgetItemResource
     {
-        $budgetItem->update($request->validated());
-        event(new BudgetItemModified($budgetItem, $request->user(), 'updated'));
+        $this->authorize('update', $budgetItem);
 
-        return $this->resourceResponse(new BudgetItemResource($budgetItem->fresh(['budget', 'category'])), 'Budget item updated successfully');
+        $budgetItem->update($request->validated());
+
+        event(new BudgetItemModified(
+            $budgetItem,
+            $request->user(),
+            'updated'
+        ));
+
+        return new BudgetItemResource(
+            $budgetItem->fresh(['budget', 'category'])
+        );
     }
 
     /**
      * Delete budget item
-     * 
+     *
      * @authenticated
      */
-    public function destroy(Request $request, BudgetItem $budgetItem): JsonResponse
+    public function destroy(Request $request, BudgetItem $budgetItem): Response
     {
-        event(new BudgetItemModified($budgetItem, $request->user(), 'deleted'));
-        $budgetItem->delete();
+        $this->authorize('delete', $budgetItem);
 
-        return $this->success(null, 'Budget item deleted successfully', 200);
+        DB::transaction(function () use ($budgetItem, $request) {
+            $governmentUnitId = $budgetItem->budget->government_unit_id;
+            $fiscalYearId = $budgetItem->budget->fiscal_year_id;
+
+            $budgetItem->delete();
+
+            event(new BudgetItemModified(
+                $budgetItem,
+                $request->user(),
+                'deleted'
+            ));
+
+            RecalculateBudgetAnalytics::dispatch(
+                $governmentUnitId,
+                $fiscalYearId
+            );
+        });
+
+        return response()->noContent();
     }
 
     /**
@@ -92,23 +140,24 @@ class BudgetItemController extends Controller
      */
     public function summary(BudgetItem $budgetItem): JsonResponse
     {
-        $budgetItem->load('budget:id,name')->loadSum('expenses', 'amount');
+        $budgetItem
+            ->load('budget:id,name')
+            ->loadSum('expenses', 'amount');
 
-        $spentAmount = $budgetItem->expenses_sum_amount ?? 0;
-        $allocatedAmount = $budgetItem->allocated_amount;
-        $utilization = ($allocatedAmount > 0) ? ($spentAmount / $allocatedAmount) * 100 : 0;
+        $spent = $budgetItem->expenses_sum_amount ?? 0;
+        $allocated = $budgetItem->allocated_amount;
 
-        $summaryData = [
+        return response()->json([
             'name' => $budgetItem->name,
             'code' => $budgetItem->code,
-            'allocated_amount' => $allocatedAmount,
-            'spent_amount' => $spentAmount,
-            'utilization_percentage' => round($utilization, 2),
+            'allocated_amount' => $allocated,
+            'spent_amount' => $spent,
+            'utilization_percentage' => $allocated > 0
+                ? round(($spent / $allocated) * 100, 2)
+                : 0,
             'budget' => [
                 'name' => $budgetItem->budget->name,
-            ]
-        ];
-
-        return $this->success($summaryData, 'Budget item summary retrieved successfully');
+            ],
+        ]);
     }
 }

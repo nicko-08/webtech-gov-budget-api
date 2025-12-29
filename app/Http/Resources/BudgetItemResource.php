@@ -4,9 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\BudgetResource;
-use App\Http\Resources\BudgetCategoryResource;
-
 
 class BudgetItemResource extends JsonResource
 {

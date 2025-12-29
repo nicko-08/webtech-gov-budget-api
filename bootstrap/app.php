@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
 
@@ -27,7 +28,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         ]);
-        $middleware->throttleApi(env('API_RATE_LIMIT', 60) . ',1');
     })
 
     ->withSchedule(function (Schedule $schedule) {
@@ -37,7 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->onFailure(function () {
                 Log::error('Budget summaries calculation failed', [
                     'command' => 'app:calculate-budget-summaries',
-                    'scheduled_time' => '02:00'
+                    'scheduled_time' => '02:00',
                 ]);
             })
             ->onSuccess(function () {
@@ -47,20 +47,27 @@ return Application::configure(basePath: dirname(__DIR__))
 
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Throwable $e, $request) {
-            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            if ($e instanceof AuthenticationException) {
+
                 Log::warning('Authentication failed', [
                     'ip' => $request->ip(),
                     'user_agent' => $request->userAgent(),
                     'url' => $request->url(),
-                    'route' => $request->route()?->getName()
+                    'route' => $request->route()?->getName(),
                 ]);
+
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'message' => 'Unauthenticated.',
+                    ], 401);
+                }
             } elseif ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
                 Log::warning('Authorization failed', [
                     'user_id' => $request->user()?->id,
                     'ip' => $request->ip(),
                     'url' => $request->url(),
                     'route' => $request->route()?->getName(),
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ]);
             } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
                 $logLevel = ($request->is('api/v1/budgets*') || $request->is('api/v1/expenses*')) ? 'info' : 'debug';
@@ -69,7 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'url' => $request->url(),
                     'route' => $request->route()?->getName(),
                     'errors' => $e->errors(),
-                    'critical_endpoint' => $request->is('api/v1/budgets*') || $request->is('api/v1/expenses*')
+                    'critical_endpoint' => $request->is('api/v1/budgets*') || $request->is('api/v1/expenses*'),
                 ]);
             } else {
                 Log::error('Unexpected error', [
@@ -78,7 +85,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'route' => $request->route()?->getName(),
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
-                    'line' => $e->getLine()
+                    'line' => $e->getLine(),
                 ]);
             }
         });

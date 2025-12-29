@@ -8,10 +8,12 @@ use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
 use App\Http\Resources\BudgetResource;
 use App\Models\Budget;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
+use App\Jobs\RecalculateBudgetAnalytics;
 
 /**
  * @group Budgets
@@ -19,27 +21,27 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 class BudgetController extends Controller
 {
-    use ApiResponse;
-
     /**
      * List budgets
-     * 
+     *
      * @queryParam page integer Page number. Example: 1
      */
     public function index(): AnonymousResourceCollection
     {
-        $budgets = Budget::with(['governmentUnit', 'fiscalYear'])
-            ->select('id', 'name', 'total_amount', 'government_unit_id', 'fiscal_year_id')
-            ->latest()
-            ->paginate(15);
+        $this->authorize('viewAny', Budget::class);
 
-        return BudgetResource::collection($budgets);
+        return BudgetResource::collection(
+            Budget::with(['governmentUnit', 'fiscalYear'])
+                ->latest()
+                ->paginate(15)
+        );
     }
 
     /**
      * Create budget
-     * 
+     *
      * @authenticated
+     *
      * @bodyParam name string required Budget name. Example: Annual Budget 2024
      * @bodyParam government_unit_id integer required Government unit ID. Example: 1
      * @bodyParam fiscal_year_id integer required Fiscal year ID. Example: 1
@@ -47,13 +49,21 @@ class BudgetController extends Controller
      */
     public function store(StoreBudgetRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $budget = Budget::create($validated);
+        $this->authorize('create', Budget::class);
 
-        event(new BudgetModified($budget, $request->user(), 'created'));
-        $budget->load(['governmentUnit', 'fiscalYear']);
+        $budget = Budget::create($request->validated());
 
-        return $this->resourceResponse(new BudgetResource($budget), 'Budget created successfully', 201);
+        event(new BudgetModified(
+            $budget,
+            $request->user(),
+            'created'
+        ));
+
+        return (new BudgetResource(
+            $budget->load(['governmentUnit', 'fiscalYear'])
+        ))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -61,13 +71,13 @@ class BudgetController extends Controller
      */
     public function show(Budget $budget): BudgetResource
     {
+        $this->authorize('view', $budget);
+
         $budget->load([
             'governmentUnit',
             'fiscalYear',
-            'budgetItems' => function ($query) {
-                $query->withSum('expenses', 'amount')
-                    ->with('category');
-            }
+            'budgetItems' => fn($query) => $query->withSum('expenses', 'amount')
+                ->with('category'),
         ]);
 
         return new BudgetResource($budget);
@@ -75,30 +85,53 @@ class BudgetController extends Controller
 
     /**
      * Update budget
-     * 
+     *
      * @authenticated
      */
-    public function update(UpdateBudgetRequest $request, Budget $budget): JsonResponse
+    public function update(UpdateBudgetRequest $request, Budget $budget): BudgetResource
     {
-        $validated = $request->validated();
-        $budget->update($validated);
+        $this->authorize('update', $budget);
 
-        event(new BudgetModified($budget, $request->user(), 'updated'));
-        $budget->load(['governmentUnit', 'fiscalYear']);
+        $budget->update($request->validated());
 
-        return $this->resourceResponse(new BudgetResource($budget), 'Budget updated successfully');
+        event(new BudgetModified(
+            $budget,
+            $request->user(),
+            'updated'
+        ));
+
+        return new BudgetResource(
+            $budget->load(['governmentUnit', 'fiscalYear'])
+        );
     }
 
     /**
      * Delete budget
-     * 
+     *
      * @authenticated
      */
-    public function destroy(Request $request, Budget $budget): JsonResponse
+    public function destroy(Request $request, Budget $budget): Response
     {
-        event(new BudgetModified($budget, $request->user(), 'deleted'));
-        $budget->delete();
+        $this->authorize('delete', $budget);
 
-        return $this->success(null, 'Budget deleted successfully', 200);
+        DB::transaction(function () use ($budget, $request) {
+            $governmentUnitId = $budget->government_unit_id;
+            $fiscalYearId = $budget->fiscal_year_id;
+
+            $budget->delete();
+
+            event(new BudgetModified(
+                $budget,
+                $request->user(),
+                'deleted'
+            ));
+
+            RecalculateBudgetAnalytics::dispatch(
+                $governmentUnitId,
+                $fiscalYearId
+            );
+        });
+
+        return response()->noContent();
     }
 }

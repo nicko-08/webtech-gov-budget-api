@@ -10,7 +10,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BudgetItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'code', 'budget_id', 'budget_category_id', 'allocated_amount'];
+
+    protected $fillable = [
+        'name',
+        'code',
+        'budget_id',
+        'budget_category_id',
+        'allocated_amount',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'budget_id' => 'integer',
+            'budget_category_id' => 'integer',
+            'allocated_amount' => 'decimal:2',
+        ];
+    }
 
     public function budget(): BelongsTo
     {

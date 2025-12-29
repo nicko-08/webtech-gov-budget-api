@@ -21,6 +21,25 @@ class StoreFiscalYearRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'year.required' => 'The fiscal year is required.',
+            'year.integer' => 'The fiscal year must be a valid year number.',
+            'year.unique' => 'This fiscal year already exists.',
+            'year.min' => 'The fiscal year must be 1900 or later.',
+
+            'start_date.required' => 'The start date is required.',
+            'start_date.date' => 'The start date must be a valid date.',
+
+            'end_date.required' => 'The end date is required.',
+            'end_date.date' => 'The end date must be a valid date.',
+            'end_date.after' => 'The end date must be after the start date.',
+
+            'is_active.boolean' => 'The active flag must be true or false.',
+        ];
+    }
+
     public function bodyParameters(): array
     {
         return [

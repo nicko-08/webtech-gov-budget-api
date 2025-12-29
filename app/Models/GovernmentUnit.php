@@ -10,16 +10,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class GovernmentUnit extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'type', 'parent_id'];
+
+    protected $fillable = [
+        'name',
+        'type',
+        'parent_id',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'parent_id' => 'integer',
+        ];
+    }
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(GovernmentUnit::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(GovernmentUnit::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function budgets(): HasMany
