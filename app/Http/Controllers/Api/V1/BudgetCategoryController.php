@@ -21,8 +21,6 @@ class BudgetCategoryController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', BudgetCategory::class);
-
         return BudgetCategoryResource::collection(
             BudgetCategory::query()->latest()->get()
         );
@@ -51,8 +49,6 @@ class BudgetCategoryController extends Controller
      */
     public function show(BudgetCategory $budgetCategory): BudgetCategoryResource
     {
-        $this->authorize('view', $budgetCategory);
-
         return new BudgetCategoryResource($budgetCategory);
     }
 

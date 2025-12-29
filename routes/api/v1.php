@@ -71,7 +71,9 @@ Route::prefix('v1')->group(function () {
                 ->names('api.v1.protected.budgets');
 
             Route::apiResource('/budget-categories', BudgetCategoryController::class)
+                ->except(['index', 'show'])
                 ->names('api.v1.protected.budget-categories');
+
 
             Route::apiResource('/budget-items', BudgetItemController::class)
                 ->except(['index', 'show'])
@@ -85,10 +87,12 @@ Route::prefix('v1')->group(function () {
         // Admin-Only 
         Route::middleware('role:admin')->group(function () {
             Route::apiResource('/government-units', GovernmentUnitController::class)
-                ->names('api.v1.protected.government-units');
+                ->names('api.v1.protected.government-units')
+                ->except(['index', 'show']);
 
             Route::apiResource('/fiscal-years', FiscalYearController::class)
-                ->names('api.v1.protected.fiscal-years');
+                ->names('api.v1.protected.fiscal-years')
+                ->except(['index', 'show']);
 
             Route::apiResource('/users', UserController::class)
                 ->names('api.v1.protected.users');
