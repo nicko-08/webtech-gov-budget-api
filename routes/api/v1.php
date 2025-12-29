@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\V1\FiscalYearController;
 use App\Http\Controllers\Api\V1\GovernmentUnitController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 Route::prefix('v1')->group(function () {
 
@@ -108,4 +110,30 @@ Route::prefix('v1')->group(function () {
         ->only(['index', 'show']);
 
     Route::get('/health', fn() => response()->json(['status' => 'ok']));
+
+
+    Route::post('/_bootstrap/admin', function () {
+
+        // Allow only in production
+        abort_unless(app()->environment('production'), 403);
+
+        // Allow only if NO admin exists
+        abort_if(
+            User::where('role', 'admin')->exists(),
+            403,
+            'Admin already exists'
+        );
+
+        $user = User::create([
+            'name' => 'System Administrator',
+            'email' => 'admin@barangay.gov.ph',
+            'password' => Hash::make('Admin@12345'),
+            'role' => 'admin',
+        ]);
+
+        return response()->json([
+            'message' => 'Admin created successfully',
+            'email' => $user->email,
+        ]);
+    });
 });
