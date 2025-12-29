@@ -17,9 +17,4 @@ ENV LOG_CHANNEL=stderr
 # Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN php artisan key:generate --force || true
-RUN php artisan migrate --force || true
-RUN php artisan config:clear || true
-RUN php artisan route:clear || true
-
 CMD ["/start.sh"]
