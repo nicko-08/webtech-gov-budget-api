@@ -238,7 +238,7 @@
                         $logoutUrl = \Illuminate\Support\Facades\Route::has('logout') ? route('logout') : url('/');
                         $logoutPostUrl = \Illuminate\Support\Facades\Route::has('logout.submit') ? route('logout.submit') : null;
                         $currentUser = \Illuminate\Support\Facades\Auth::guard('web')->user();
-                        $displayName = $currentUser?->name ?: 'Guest User';
+                        $displayName = auth()->user()?->name;
                         $displayRole = $currentUser?->role ? ucfirst(str_replace('-', ' ', $currentUser->role)) : 'Not signed in';
                         $nameParts = preg_split('/\s+/', trim($displayName)) ?: [];
                         $initials = collect($nameParts)
